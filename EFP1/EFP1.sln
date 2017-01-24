@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF", "EF\EF.csproj", "{E983369C-3049-47F8-967D-6BC54BAC584F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoSite", "TodoSite\TodoSite.csproj", "{8E685256-0052-4F51-88E2-6AF231D341A6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E983369C-3049-47F8-967D-6BC54BAC584F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E983369C-3049-47F8-967D-6BC54BAC584F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E983369C-3049-47F8-967D-6BC54BAC584F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E983369C-3049-47F8-967D-6BC54BAC584F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E685256-0052-4F51-88E2-6AF231D341A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E685256-0052-4F51-88E2-6AF231D341A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E685256-0052-4F51-88E2-6AF231D341A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E685256-0052-4F51-88E2-6AF231D341A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
