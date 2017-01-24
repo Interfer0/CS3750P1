@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Project1TodoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="categoryid" />
+          </Key>
+          <Property Name="categoryid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="description" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="CategoryTodoList">
+          <Key>
+            <PropertyRef Name="categorytodolistid" />
+          </Key>
+          <Property Name="categorytodolistid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="todolistid" Type="int" Nullable="false" />
+          <Property Name="categoryid" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TodoItem">
+          <Key>
+            <PropertyRef Name="todoitemid" />
+          </Key>
+          <Property Name="todoitemid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="todolistid" Type="int" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="description" Type="nvarchar" MaxLength="128" />
+          <Property Name="complete" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TodoList">
+          <Key>
+            <PropertyRef Name="todolistid" />
+          </Key>
+          <Property Name="todolistid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CategoryTodoList_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="CategoryTodoList" Type="Self.CategoryTodoList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="categoryid" />
+            </Principal>
+            <Dependent Role="CategoryTodoList">
+              <PropertyRef Name="categoryid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoryTodoList_TodoList">
+          <End Role="TodoList" Type="Self.TodoList" Multiplicity="1" />
+          <End Role="CategoryTodoList" Type="Self.CategoryTodoList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TodoList">
+              <PropertyRef Name="todolistid" />
+            </Principal>
+            <Dependent Role="CategoryTodoList">
+              <PropertyRef Name="todolistid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TodoItem_TodoList">
+          <End Role="TodoList" Type="Self.TodoList" Multiplicity="1" />
+          <End Role="TodoItem" Type="Self.TodoItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TodoList">
+              <PropertyRef Name="todolistid" />
+            </Principal>
+            <Dependent Role="TodoItem">
+              <PropertyRef Name="todolistid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Project1TodoModelStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CategoryTodoList" EntityType="Self.CategoryTodoList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TodoItem" EntityType="Self.TodoItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TodoList" EntityType="Self.TodoList" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CategoryTodoList_Category" Association="Self.FK_CategoryTodoList_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="CategoryTodoList" EntitySet="CategoryTodoList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoryTodoList_TodoList" Association="Self.FK_CategoryTodoList_TodoList">
+            <End Role="TodoList" EntitySet="TodoList" />
+            <End Role="CategoryTodoList" EntitySet="CategoryTodoList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TodoItem_TodoList" Association="Self.FK_TodoItem_TodoList">
+            <End Role="TodoList" EntitySet="TodoList" />
+            <End Role="TodoItem" EntitySet="TodoItem" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Project1TodoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="categoryid" />
+          </Key>
+          <Property Name="categoryid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CategoryTodoLists" Relationship="Self.FK_CategoryTodoList_Category" FromRole="Category" ToRole="CategoryTodoList" />
+        </EntityType>
+        <EntityType Name="CategoryTodoList">
+          <Key>
+            <PropertyRef Name="categorytodolistid" />
+          </Key>
+          <Property Name="categorytodolistid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="todolistid" Type="Int32" Nullable="false" />
+          <Property Name="categoryid" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_CategoryTodoList_Category" FromRole="CategoryTodoList" ToRole="Category" />
+          <NavigationProperty Name="TodoList" Relationship="Self.FK_CategoryTodoList_TodoList" FromRole="CategoryTodoList" ToRole="TodoList" />
+        </EntityType>
+        <EntityType Name="TodoItem">
+          <Key>
+            <PropertyRef Name="todoitemid" />
+          </Key>
+          <Property Name="todoitemid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="todolistid" Type="Int32" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="complete" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="TodoList" Relationship="Self.FK_TodoItem_TodoList" FromRole="TodoItem" ToRole="TodoList" />
+        </EntityType>
+        <EntityType Name="TodoList">
+          <Key>
+            <PropertyRef Name="todolistid" />
+          </Key>
+          <Property Name="todolistid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CategoryTodoLists" Relationship="Self.FK_CategoryTodoList_TodoList" FromRole="TodoList" ToRole="CategoryTodoList" />
+          <NavigationProperty Name="TodoItems" Relationship="Self.FK_TodoItem_TodoList" FromRole="TodoList" ToRole="TodoItem" />
+        </EntityType>
+        <Association Name="FK_CategoryTodoList_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="CategoryTodoList" Type="Self.CategoryTodoList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="categoryid" />
+            </Principal>
+            <Dependent Role="CategoryTodoList">
+              <PropertyRef Name="categoryid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoryTodoList_TodoList">
+          <End Role="TodoList" Type="Self.TodoList" Multiplicity="1" />
+          <End Role="CategoryTodoList" Type="Self.CategoryTodoList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TodoList">
+              <PropertyRef Name="todolistid" />
+            </Principal>
+            <Dependent Role="CategoryTodoList">
+              <PropertyRef Name="todolistid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TodoItem_TodoList">
+          <End Role="TodoList" Type="Self.TodoList" Multiplicity="1" />
+          <End Role="TodoItem" Type="Self.TodoItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TodoList">
+              <PropertyRef Name="todolistid" />
+            </Principal>
+            <Dependent Role="TodoItem">
+              <PropertyRef Name="todolistid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Project1TodoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="CategoryTodoLists" EntityType="Self.CategoryTodoList" />
+          <EntitySet Name="TodoItems" EntityType="Self.TodoItem" />
+          <EntitySet Name="TodoLists" EntityType="Self.TodoList" />
+          <AssociationSet Name="FK_CategoryTodoList_Category" Association="Self.FK_CategoryTodoList_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="CategoryTodoList" EntitySet="CategoryTodoLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoryTodoList_TodoList" Association="Self.FK_CategoryTodoList_TodoList">
+            <End Role="TodoList" EntitySet="TodoLists" />
+            <End Role="CategoryTodoList" EntitySet="CategoryTodoLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TodoItem_TodoList" Association="Self.FK_TodoItem_TodoList">
+            <End Role="TodoList" EntitySet="TodoLists" />
+            <End Role="TodoItem" EntitySet="TodoItems" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Project1TodoModelStoreContainer" CdmEntityContainer="Project1TodoEntities">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="Project1TodoModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="categoryid" ColumnName="categoryid" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CategoryTodoLists">
+            <EntityTypeMapping TypeName="Project1TodoModel.CategoryTodoList">
+              <MappingFragment StoreEntitySet="CategoryTodoList">
+                <ScalarProperty Name="categorytodolistid" ColumnName="categorytodolistid" />
+                <ScalarProperty Name="todolistid" ColumnName="todolistid" />
+                <ScalarProperty Name="categoryid" ColumnName="categoryid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TodoItems">
+            <EntityTypeMapping TypeName="Project1TodoModel.TodoItem">
+              <MappingFragment StoreEntitySet="TodoItem">
+                <ScalarProperty Name="todoitemid" ColumnName="todoitemid" />
+                <ScalarProperty Name="todolistid" ColumnName="todolistid" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="complete" ColumnName="complete" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TodoLists">
+            <EntityTypeMapping TypeName="Project1TodoModel.TodoList">
+              <MappingFragment StoreEntitySet="TodoList">
+                <ScalarProperty Name="todolistid" ColumnName="todolistid" />
+                <ScalarProperty Name="title" ColumnName="title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

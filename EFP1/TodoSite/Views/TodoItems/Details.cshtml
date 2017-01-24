@@ -1,0 +1,50 @@
+﻿@model EF.TodoItem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TodoItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.complete)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.complete)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TodoList.title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TodoList.title)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.todoitemid }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
