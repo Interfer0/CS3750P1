@@ -115,6 +115,16 @@ namespace TodoSite.Controllers
             return RedirectToAction("Index");
         }
 
+        public HtmlString getUseCount(Category cat)
+        {
+
+
+            return new HtmlString((db.CategoryTodoLists
+                .Where(o => o.categoryid == cat.categoryid)
+                .Count()).ToString()
+                );
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

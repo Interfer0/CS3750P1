@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<EF.Category>
+   
 
 @{
     ViewBag.Title = "Index";
@@ -17,23 +18,42 @@
         <th>
             @Html.DisplayNameFor(model => model.description)
         </th>
+        <th>
+            Test
+        </th>
+
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
+    
+    <tr style="background-color:darkgoldenrod;">
         <td>
-            @Html.DisplayFor(modelItem => item.title)
+
+            @Html.TextBox("test", item.title)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.description)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.categoryid }) |
-            @Html.ActionLink("Details", "Details", new { id=item.categoryid }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.categoryid })
+
+            @{ 
+                var test = Html.Action("getUseCount", item);
+            }
+            @test
+        </td>
+
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.categoryid })
+            @{
+                if (int.Parse(test.ToString()) == 0)
+                {
+                    @Html.ActionLink("Delete", "Delete", new { id = item.categoryid });
+                        }
+                    }
         </td>
     </tr>
+    
 }
 
 </table>
