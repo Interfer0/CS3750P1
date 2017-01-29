@@ -38,7 +38,8 @@
         <td>
 
             @{ 
-                var test = Html.Action("getUseCount", item);
+                var test = item.CategoryTodoLists.Count;
+                //var test = Html.Action("getUseCount", item);
             }
             @test
         </td>

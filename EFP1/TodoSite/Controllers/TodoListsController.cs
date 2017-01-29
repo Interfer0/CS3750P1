@@ -123,5 +123,15 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public int Insert(String listID, String catID)
+        {
+            CategoryTodoList catTo = new CategoryTodoList();
+            catTo.categoryid = int.Parse(catID);
+            catTo.todolistid = int.Parse(listID);
+            db.CategoryTodoLists.Add(catTo);
+            db.SaveChanges();
+            return catTo.categorytodolistid;      
+        }
     }
 }
