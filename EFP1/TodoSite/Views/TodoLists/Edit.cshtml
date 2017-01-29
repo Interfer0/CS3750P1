@@ -6,11 +6,66 @@
 
 <h2>Edit</h2>
 
+<script>
+
+
+
+    function deleteCat(i,cattoid)
+    {
+        var element = document.getElementById('catDiv ' + cattoid);
+        element.parentNode.removeChild(element);
+        $.ajax({
+            url: "../../../CategoryTodoLists/Delete/" + cattoid,
+            type: 'POST',
+            success: function (product) {
+
+            },
+            error: function (request, message, error) {
+                Console.log("failure");
+            }
+        });
+
+    };
+
+    function beginCatAdd() {
+        document.getElementById('btnAddClass').style.display = 'none';
+        document.getElementById('addCategory').style.display = '';
+    };
+
+    function addCategory()
+    {
+        var selected = document.getElementById('selectedCategory');
+        var nowSelected = selected.options[selected.selectedIndex].value;
+        var myList = document.getElementById('todolistid').value;
+        //document.getElementById('categories').append(myList);
+
+        var urlInsert = '@Url.Action("Insert")';
+
+        $.get(urlInsert, { listID: myList, catID: nowSelected }, function (data) {
+            var catDiv = document.createElement('div');
+            catDiv.id = "catDiv " + data;
+            catDiv.style.width = "20%";
+            catDiv.innerHTML = '<div id="catDiv ' + nowSelected + ' style="border-style:dotted; width:20%;">' +
+                                    selected.options[selected.selectedIndex].label +
+                                    '<span style="font-size:9px;">' +
+                                        '(<a  onclick="deleteCat(' + nowSelected + ',' + data + ')"href="javascript:void(0);">delete</a>)' +
+                                    '</span>' +
+                                '</div>';
+            document.getElementById('categories').appendChild(catDiv);
+
+
+        });
+
+        document.getElementById('btnAddClass').style.display = '';
+        document.getElementById('addCategory').style.display = 'none';
+    };
+
+</script>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>TodoList</h4>
         <hr />
@@ -20,7 +75,71 @@
         <div class="form-group">
             @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                Title:
+                <!-- title label -->
+                <!-- textbox for title --> 
+               @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+
+                <br />
+                Categories:<div id="categories">
+                <!-- for each loop to list categories -->
+                @{
+
+
+                    foreach (var cat in Model.CategoryTodoLists)
+                    {
+                        <div id="catDiv @cat.categorytodolistid" style="border-style:dotted; width:20%;">
+                        @cat.Category.title 
+                        <!--Add delete button here-->
+                            <span style="font-size:9px;">
+                                (<a  onclick="deleteCat(@cat.categoryid,@cat.categorytodolistid)"href="javascript:void(0);">delete</a>)
+                            </span>
+                        </div>
+                        
+                    }
+
+                }
+
+                </div><br />
+                <!-- button to add category-->
+                <div id="addCategory" style="display:none;">
+                        <select id="selectedCategory">
+                            <option disabled selected="selected">Select an option...</option>
+                            @{
+                                EF.Project1TodoEntities db = new EF.Project1TodoEntities();
+                                foreach (var c in db.Categories.ToList())
+                                {
+                                    <option value="@c.categoryid">@c.title</option>
+                                }
+                            }
+                        </select>
+                    <input id="btnAddCategory" class="btn btn-default" type="button" value="Add Catagory" onclick="addCategory()" />
+                </div>
+                @{using (Html.BeginForm())
+                    {
+                        <input id ="btnAddClass" class="btn btn-default" type="button" value="Add Catagory" onclick="beginCatAdd()" />
+                    }
+                }
+
+                <br />
+
+                Items:<div id="todoitems">
+                <!-- for each list to add todo items -->
+                @{ 
+
+
+                    foreach (var item in Model.TodoItems)
+                    {
+                        @item.title;
+
+                        <br />
+                        }
+
+                }
+                </div>
+
+                <!--Button to add a todo item-->
+
                 
                 @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
             </div>
