@@ -10,112 +10,116 @@ using EF;
 
 namespace TodoSite.Controllers
 {
-    public class TodoItemsController : Controller
+    public class CategoryTodoListsController : Controller
     {
         private Project1TodoEntities db = new Project1TodoEntities();
 
-        // GET: TodoItems
+        // GET: CategoryTodoLists
         public ActionResult Index()
         {
-            var todoItems = db.TodoItems.Include(t => t.TodoList);
-            return View(todoItems.ToList());
+            var categoryTodoLists = db.CategoryTodoLists.Include(c => c.Category).Include(c => c.TodoList);
+            return View(categoryTodoLists.ToList());
         }
 
-        // GET: TodoItems/Details/5
+        // GET: CategoryTodoLists/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TodoItem todoItem = db.TodoItems.Find(id);
-            if (todoItem == null)
+            CategoryTodoList categoryTodoList = db.CategoryTodoLists.Find(id);
+            if (categoryTodoList == null)
             {
                 return HttpNotFound();
             }
-            return View(todoItem);
+            return View(categoryTodoList);
         }
 
-        // GET: TodoItems/Create
+        // GET: CategoryTodoLists/Create
         public ActionResult Create()
         {
+            ViewBag.categoryid = new SelectList(db.Categories, "categoryid", "title");
             ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title");
             return View();
         }
 
-        // POST: TodoItems/Create
+        // POST: CategoryTodoLists/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "todoitemid,todolistid,title,description,complete")] TodoItem todoItem)
+        public ActionResult Create([Bind(Include = "categorytodolistid,todolistid,categoryid")] CategoryTodoList categoryTodoList)
         {
             if (ModelState.IsValid)
             {
-                db.TodoItems.Add(todoItem);
+                db.CategoryTodoLists.Add(categoryTodoList);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title", todoItem.todolistid);
-            return View(todoItem);
+            ViewBag.categoryid = new SelectList(db.Categories, "categoryid", "title", categoryTodoList.categoryid);
+            ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title", categoryTodoList.todolistid);
+            return View(categoryTodoList);
         }
 
-        // GET: TodoItems/Edit/5
+        // GET: CategoryTodoLists/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TodoItem todoItem = db.TodoItems.Find(id);
-            if (todoItem == null)
+            CategoryTodoList categoryTodoList = db.CategoryTodoLists.Find(id);
+            if (categoryTodoList == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title", todoItem.todolistid);
-            return View(todoItem);
+            ViewBag.categoryid = new SelectList(db.Categories, "categoryid", "title", categoryTodoList.categoryid);
+            ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title", categoryTodoList.todolistid);
+            return View(categoryTodoList);
         }
 
-        // POST: TodoItems/Edit/5
+        // POST: CategoryTodoLists/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "todoitemid,todolistid,title,description,complete")] TodoItem todoItem)
+        public ActionResult Edit([Bind(Include = "categorytodolistid,todolistid,categoryid")] CategoryTodoList categoryTodoList)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(todoItem).State = EntityState.Modified;
+                db.Entry(categoryTodoList).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title", todoItem.todolistid);
-            return View(todoItem);
+            ViewBag.categoryid = new SelectList(db.Categories, "categoryid", "title", categoryTodoList.categoryid);
+            ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title", categoryTodoList.todolistid);
+            return View(categoryTodoList);
         }
 
-        // GET: TodoItems/Delete/5
+        // GET: CategoryTodoLists/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TodoItem todoItem = db.TodoItems.Find(id);
-            if (todoItem == null)
+            CategoryTodoList categoryTodoList = db.CategoryTodoLists.Find(id);
+            if (categoryTodoList == null)
             {
                 return HttpNotFound();
             }
-            return View(todoItem);
+            return View(categoryTodoList);
         }
 
-        // POST: TodoItems/Delete/5
+        // POST: CategoryTodoLists/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            TodoItem todoItem = db.TodoItems.Find(id);
-            db.TodoItems.Remove(todoItem);
+            CategoryTodoList categoryTodoList = db.CategoryTodoLists.Find(id);
+            db.CategoryTodoLists.Remove(categoryTodoList);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -127,28 +131,6 @@ namespace TodoSite.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        public int Insert(String title, String description, String listid)
-        {
-            TodoItem toItem = new TodoItem();
-            toItem.todolistid = int.Parse(listid);
-            toItem.title = title;
-            toItem.description = description;            
-            toItem.complete = 0;
-            db.TodoItems.Add(toItem);
-            db.SaveChanges();
-            return toItem.todoitemid;
-        }
-
-        
-        public int DeleteItem(String itemid)
-        {
-
-            TodoItem toItem = db.TodoItems.Find(int.Parse(itemid));
-            db.TodoItems.Remove(toItem);
-            db.SaveChanges();
-            return toItem.todoitemid;
         }
     }
 }

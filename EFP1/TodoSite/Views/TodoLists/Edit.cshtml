@@ -6,11 +6,132 @@
 
 <h2>Edit</h2>
 
+<script>
+
+
+    //Delete a category and remove it from display -db
+    function deleteCat(i,cattoid)
+    {
+        var element = document.getElementById('catDiv ' + cattoid);
+        $.ajax({ //CRUD call to remove element -db
+            url: "../../../CategoryTodoLists/Delete/" + cattoid,
+            type: 'POST',
+            success: function (product) {
+                element.parentNode.removeChild(element); //remove cat frome category -db
+            },
+            error: function (request, message, error) {
+                Console.log("failure");
+            }
+        });
+    };
+
+    //Hide add category button and display dropdown list of categories -db
+    function beginCatAdd() {
+        document.getElementById('btnAddClass').style.display = 'none';
+        document.getElementById('addCategory').style.display = '';
+    };
+
+    //Add the category to the list in database, add categoy to list in display -db
+    function addCategory()
+    {
+        var selected = document.getElementById('selectedCategory');
+        var nowSelected = selected.options[selected.selectedIndex].value;
+        var myList = document.getElementById('todolistid').value;
+
+        var urlInsert = '@Url.Action("Insert")';
+
+        $.get(urlInsert, { listID: myList, catID: nowSelected }, function (data) { //run a get command to add the category to the list and get the resulting ID. -db
+            var catDiv = document.createElement('div');
+            catDiv.id = "catDiv " + data;
+            catDiv.style.width = "20%";
+            catDiv.innerHTML =      selected.options[selected.selectedIndex].label +
+                                    '<span style="font-size:9px;">' +
+                                        '(<a  onclick="deleteCat(' + nowSelected + ',' + data + ')"href="javascript:void(0);">delete</a>)' +
+                                    '</span>';
+            document.getElementById('categories').appendChild(catDiv); //add the item to the list display -db
+        });
+
+        document.getElementById('btnAddClass').style.display = '';
+        document.getElementById('addCategory').style.display = 'none';
+    };
+
+    function itemTemplete(itemID,itemTitle,itemDescription, itemCompleted)
+    {
+        var comp = "";
+        if(itemCompleted > 0)
+            comp = "checked";
+        var itemDiv = document.createElement('div');
+        itemDiv.id = "itmDiv " + itemID;
+        itemDiv.innerHTML = '<div style="width:20%;float:left;clear:left;border-bottom: 1px solid black;height:20px;">' +
+                               itemTitle +
+                            '</div>' +
+                            '<div style="width:40%;min-height:3px;float:left;border-bottom: 1px solid black;height:20px;">' +
+                                itemDescription + ''+
+                            '</div>' +
+                            '<div style="width:30px;float:left;border-bottom: 1px solid black;height:20px;">' +
+                                '<input type="checkbox" name="cb' +
+                                itemID + '" ' +
+                                comp +
+                                '/>' +
+                            '</div>' +
+                            '<span style="font-size:9px;float:left;">' +
+                            '(<a  onclick="test" href="javascript:void(0);">edit</a>)     ' +
+                            '(<a onclick="deleteItem('+itemID+')" href="javascript:void(0);">delete</a>)' +
+                            '</span>'
+        ;
+        return itemDiv;
+    }
+
+    function deleteItem(itemID)
+    {
+        var urlInsert = '@Url.Action("DeleteItem","TodoItems")';
+        $.post(urlInsert, { itemid: itemID}, function (data) {
+            document.getElementById('itemsHolder').removeChild(document.getElementById("itmDiv "+itemID));
+        });
+
+    }
+
+    function cancelAddItem()
+    {
+        document.getElementById('newItemTitle').value = "";
+        document.getElementById('newItemDescription').value = "";
+        document.getElementById('newItemDiv').style.display = 'none';
+        document.getElementById('btnAddItem').style.display = 'none';
+        document.getElementById('btnCancelItem').style.display = 'none';
+        document.getElementById('btnAddItemEmpty').style.display = '';
+    }
+
+    function beginItemAdd()
+    {
+        document.getElementById('newItemDiv').style.display = '';
+        document.getElementById('btnAddItem').style.display = '';
+        document.getElementById('btnCancelItem').style.display = '';
+        document.getElementById('btnAddItemEmpty').style.display = 'none';
+    }
+
+    function addItem()
+    {
+        var newTitle = document.getElementById('newItemTitle').value;
+        var newDescription = document.getElementById('newItemDescription').value;
+        var myList = document.getElementById('todolistid').value;
+
+        var urlInsert = '@Url.Action("Insert","TodoItems")';
+
+        $.get(urlInsert, { title: newTitle, description: newDescription, listid: myList }, function (data)
+            {
+            var itmDiv = itemTemplete(data,newTitle,newDescription,0)
+            document.getElementById('itemsHolder').appendChild(itmDiv);
+            });
+
+        cancelAddItem();
+    }
+
+</script>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>TodoList</h4>
         <hr />
@@ -18,16 +139,108 @@
         @Html.HiddenFor(model => model.todolistid)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <!--@Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })-->
             <div class="col-md-10">
-                @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                Title:
+                <!-- title label -->
+                <!-- textbox for title --> 
+               @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+
+                <br />
+                Categories:<div id="categories">
+                <!-- for each loop to list categories -->
+                @{
+
+
+                    foreach (var cat in Model.CategoryTodoLists)
+                    {
+                        <div id="catDiv @cat.categorytodolistid" width:20%;">
+                        @cat.Category.title 
+                        <!--Add delete button here-->
+                            <span style="font-size:9px;">
+                                (<a  onclick="deleteCat(@cat.categoryid,@cat.categorytodolistid)"href="javascript:void(0);">delete</a>)
+                            </span>
+                        </div>
+
+                    }
+
+
+                }
+
+                </div><br />
+                <!-- button to add category-->
+                <div id="addCategory" style="display:none;">
+                        <select id="selectedCategory">
+                            <option disabled selected="selected">Select an option...</option>
+                            @{
+                                EF.Project1TodoEntities db = new EF.Project1TodoEntities();
+                                foreach (var c in db.Categories.ToList())
+                                {
+                                    <option value="@c.categoryid">@c.title</option>
+                                }
+                            }
+                        </select>
+                    <input id="btnAddCategory" class="btn btn-default" type="button" value="Add Catagory" onclick="addCategory()" />
+                </div>
+                @{using (Html.BeginForm())
+                    {
+                        <input id ="btnAddClass" class="btn btn-default" type="button" value="Add Catagory" onclick="beginCatAdd()" />
+                    }
+                }
+
+                <br />
+                <br />
+                <br />
+
+                Items:<div id="todoitems">
+                <!-- for each list to add todo items -->
+                <div style="border-bottom-style:groove;">
+                    <div style="width:20%;float:left;border-bottom-style:groove;">Title:</div>
+                    <div style="width:40%;float:left;border-bottom-style:groove;">Description</div>
+                    <div style="width:90px;float:left;border-bottom-style:groove;clear:right;">Complete</div>
+                </div>
+                <div id="itemsHolder"></div>
+                @{ 
+
+
+                    foreach (var item in Model.TodoItems)
+                    {
+                        <script>
+                            var thisItem = itemTemplete('@item.todoitemid','@item.title','@item.description ', '@item.complete');
+                            document.getElementById('itemsHolder').appendChild(thisItem);
+                        </script>
+
+                        <br />
+                     }
+                 }
+                
+                    
+                    <div id="newItemDiv" style="display:none;clear:left;">
+                
+
+                        <input type="text" id="newItemTitle" style="width:20%;" />
+                        <input type="text" id="newItemDescription" style="width:40%;" />
+                        </div>
+                    <div style="text-align:center;clear:left;width:60%;">
+                        
+                            <input id="btnAddItem" class="btn btn-default" type="button" value="Save..." onclick="addItem()" style="display:none;"/>
+                            <input id="btnCancelItem" class="btn btn-default" type="button" value="Cancel" onclick="cancelAddItem()" style="display:none;" />
+                            <input id="btnAddItemEmpty" class="btn btn-default" type="button" value="Add Todo Item" onclick="beginItemAdd()"  />
+                       
+                    </div>
+                
+                </div>
+
+                <!--Button to add a todo item-->
+
+                
                 @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <!--<input type="submit" value="Save" class="btn btn-default" />-->
             </div>
         </div>
     </div>
