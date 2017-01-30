@@ -128,5 +128,27 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public int Insert(String title, String description, String listid)
+        {
+            TodoItem toItem = new TodoItem();
+            toItem.todolistid = int.Parse(listid);
+            toItem.title = title;
+            toItem.description = description;            
+            toItem.complete = 0;
+            db.TodoItems.Add(toItem);
+            db.SaveChanges();
+            return toItem.todoitemid;
+        }
+
+        
+        public int DeleteItem(String itemid)
+        {
+
+            TodoItem toItem = db.TodoItems.Find(int.Parse(itemid));
+            db.TodoItems.Remove(toItem);
+            db.SaveChanges();
+            return toItem.todoitemid;
+        }
     }
 }

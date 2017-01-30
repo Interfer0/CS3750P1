@@ -58,10 +58,10 @@
     function itemTemplete(itemID,itemTitle,itemDescription, itemCompleted)
     {
         var comp = "";
-        if(itemCompleted <= 0)
+        if(itemCompleted > 0)
             comp = "checked";
         var itemDiv = document.createElement('div');
-        itemDiv.id = "itmDiv" + itemID;
+        itemDiv.id = "itmDiv " + itemID;
         itemDiv.innerHTML = '<div style="width:20%;float:left;clear:left;border-bottom: 1px solid black;height:20px;">' +
                                itemTitle +
                             '</div>' +
@@ -76,13 +76,54 @@
                             '</div>' +
                             '<span style="font-size:9px;float:left;">' +
                             '(<a  onclick="test" href="javascript:void(0);">edit</a>)     ' +
-                            '(<a onclick="test" href="javascript:void(0);">delete</a>)' +
+                            '(<a onclick="deleteItem('+itemID+')" href="javascript:void(0);">delete</a>)' +
                             '</span>'
         ;
         return itemDiv;
-            
+    }
 
+    function deleteItem(itemID)
+    {
+        var urlInsert = '@Url.Action("DeleteItem","TodoItems")';
+        $.post(urlInsert, { itemid: itemID}, function (data) {
+            document.getElementById('itemsHolder').removeChild(document.getElementById("itmDiv "+itemID));
+        });
 
+    }
+
+    function cancelAddItem()
+    {
+        document.getElementById('newItemTitle').value = "";
+        document.getElementById('newItemDescription').value = "";
+        document.getElementById('newItemDiv').style.display = 'none';
+        document.getElementById('btnAddItem').style.display = 'none';
+        document.getElementById('btnCancelItem').style.display = 'none';
+        document.getElementById('btnAddItemEmpty').style.display = '';
+    }
+
+    function beginItemAdd()
+    {
+        document.getElementById('newItemDiv').style.display = '';
+        document.getElementById('btnAddItem').style.display = '';
+        document.getElementById('btnCancelItem').style.display = '';
+        document.getElementById('btnAddItemEmpty').style.display = 'none';
+    }
+
+    function addItem()
+    {
+        var newTitle = document.getElementById('newItemTitle').value;
+        var newDescription = document.getElementById('newItemDescription').value;
+        var myList = document.getElementById('todolistid').value;
+
+        var urlInsert = '@Url.Action("Insert","TodoItems")';
+
+        $.get(urlInsert, { title: newTitle, description: newDescription, listid: myList }, function (data)
+            {
+            var itmDiv = itemTemplete(data,newTitle,newDescription,0)
+            document.getElementById('itemsHolder').appendChild(itmDiv);
+            });
+
+        cancelAddItem();
     }
 
 </script>
@@ -120,8 +161,9 @@
                                 (<a  onclick="deleteCat(@cat.categoryid,@cat.categorytodolistid)"href="javascript:void(0);">delete</a>)
                             </span>
                         </div>
-                        
+
                     }
+
 
                 }
 
@@ -157,6 +199,7 @@
                     <div style="width:40%;float:left;border-bottom-style:groove;">Description</div>
                     <div style="width:90px;float:left;border-bottom-style:groove;clear:right;">Complete</div>
                 </div>
+                <div id="itemsHolder"></div>
                 @{ 
 
 
@@ -164,13 +207,28 @@
                     {
                         <script>
                             var thisItem = itemTemplete('@item.todoitemid','@item.title','@item.description ', '@item.complete');
-                            document.getElementById('todoitems').appendChild(thisItem);
+                            document.getElementById('itemsHolder').appendChild(thisItem);
                         </script>
 
                         <br />
-                        }
+                     }
+                 }
+                
+                    
+                    <div id="newItemDiv" style="display:none;clear:left;">
+                
 
-                }
+                        <input type="text" id="newItemTitle" style="width:20%;" />
+                        <input type="text" id="newItemDescription" style="width:40%;" />
+                        </div>
+                    <div style="text-align:center;clear:left;width:60%;">
+                        
+                            <input id="btnAddItem" class="btn btn-default" type="button" value="Save..." onclick="addItem()" style="display:none;"/>
+                            <input id="btnCancelItem" class="btn btn-default" type="button" value="Cancel" onclick="cancelAddItem()" style="display:none;" />
+                            <input id="btnAddItemEmpty" class="btn btn-default" type="button" value="Add Todo Item" onclick="beginItemAdd()"  />
+                       
+                    </div>
+                
                 </div>
 
                 <!--Button to add a todo item-->
@@ -182,7 +240,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <!--<input type="submit" value="Save" class="btn btn-default" />-->
             </div>
         </div>
     </div>
