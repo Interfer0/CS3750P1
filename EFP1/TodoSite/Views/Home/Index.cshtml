@@ -16,14 +16,23 @@
 </div>
 
 <div class="row" >
-    <div class="col-md-4" style="background-color:#FCF0AD">
+    <div class="col-md-4" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; width: 200px; padding-bottom: 10px;">
         <h2>To Do Lists</h2>
         <p>Collection of To Do Lists</p>
-        <p><a class="btn btn-default">Access Lists &raquo;</a></p>
+        <p><input type="button" value="Access Lists" onclick="location.href='@Url.Action("Index", "TodoLists")'" /></p>
     </div>
-    <div class="col-md-4" style="background-color:#FCF0AD">
+    <div class="col-md-4" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; width: 200px; padding-bottom:10px;">
         <h2>List Categories</h2>
         <p>Collection of Current Categories</p>
-        <p><a class="btn btn-default">Access Categories &raquo;</a></p>
+        <p><input type="button" value="Access Categories" onclick="location.href='@Url.Action("Index", "Categories")'"/></p>
     </div>
+</div>
+
+<div>
+    <h4>
+        Team Members:
+    </h4>
+    <p>
+        Daniel Bigelow, Cade Kynaston, Justin Messenger, Nelson Muhlestein, Wesley Smith
+    </p>
 </div>
