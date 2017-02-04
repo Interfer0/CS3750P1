@@ -1,33 +1,131 @@
-﻿@model IEnumerable<EF.TodoList>
+﻿
+
+@model IEnumerable<EF.TodoList>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Lists";
 }
 
-<h2>Index</h2>
+<style>
+   
+    body , html{
+        width: 100vw;
+        height: 100vh;
+    }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.title)
-        </th>
-        <th></th>
-    </tr>
+    .listOfLists {
+      
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        width: 100%;
+     
+    }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.title)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.todolistid }) |
-            @Html.ActionLink("Details", "Details", new { id=item.todolistid }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.todolistid })
-        </td>
-    </tr>
-}
+    .singleList, .createNewList {
+        border-radius: 2px; 
+        border: 1px solid;
+        padding: 10px;
+        margin: 10px;
+        display: inline-block;
+        background: #ffe48c;
+        width: 300px;
+        height: 300px;
+       
+        text-align: center;
 
-</table>
+    }
+
+    .createNewList {
+        font-size: 200px;
+    }
+
+
+    .topItems {
+        display: flex;
+        flex-direction: column;
+        margin-top:15px;
+
+    }
+
+    .categories {
+        height:90px;
+        width:270px;
+        overflow:auto;
+        margin: 5px;
+        text-align:right;
+        padding:10px;
+
+    }
+
+    .categories::-webkit-scrollbar-thumb {
+        :lightgoldenrodyellow;
+
+    }
+
+    .container1 {
+        display:flex;
+        flex-direction:column;
+        height: 200px;
+        justify-content:flex-start;
+         scrollbar-base-color: lightgoldenrodyellow;
+
+    }
+
+
+    p {
+        color: blue;
+    }
+</style>
+
+
+   
+        <div class="listOfLists">
+            @foreach (var item in Model)
+            {
+                <div class="singleList">
+                    <h2>@Html.DisplayFor(modelItem => item.title)  </h2>
+                    
+
+                    <div class="container1">
+
+                        <div class="categories">
+                            @{
+                                for (var i = 0; i < item.CategoryTodoLists.Count; i++)
+                                {
+                                    @Html.DisplayFor(modelItem => item.CategoryTodoLists.ToArray()[i].Category.title)<br />
+                                }
+                            }
+                        </div>
+
+                    <div class="topItems">
+                        <ul>
+                            
+                        @{var numOfItems = (item.TodoItems.Count <= 3) ? item.TodoItems.Count : 3;
+                            for(var i = 0; i < numOfItems; i++)
+                            {
+                                <li style="text-align:left">
+                                @Html.DisplayFor(modelItem => item.TodoItems.ToArray()[i].title)
+                                 </li>
+
+                            }                  
+                    }
+                                                                                     
+                        </ul>
+                        </div>
+                     
+                    
+                    </div>
+
+                    <div class="doStuff">
+                        
+                        @Html.ActionLink("View/Edit", "Edit", new { id = item.todolistid }) 
+                    </div>
+                </div>
+            }
+            <div class="createNewList">
+                @Html.ActionLink("+", "Create")
+            </div>
+        </div>
+   
+
