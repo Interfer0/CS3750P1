@@ -64,18 +64,18 @@
         itemDiv.id = "itmDiv " + itemID;
         itemDiv.style.verticalAlign = 'center';
         itemDiv.innerHTML =            
-            '<div style="width:20%;float:left;clear:left;border-bottom: 1px solid black;min-height:28px;">' +
+            '<div style="width:20%;float:left;clear:left;min-height:28px;">' +
                 '<div id="txtTitle ' + itemID + '">' + itemTitle + '</div><input id="txtBoxTitle ' +
                     itemID + '" value="' + itemTitle + '" style="display:none;"/>' +
             '</div>' +
-                '<div style="width:40%;min-height:3px;float:left;border-bottom: 1px solid black;min-height:28px;">' +
+                '<div style="width:40%;min-height:3px;float:left;min-height:28px;">' +
             '<div id="txtDescription ' + itemID + '">' + itemDescription + '</div><input id="txtBoxDescription ' +
                 itemID + '" value="' + itemDescription + '" style="display:none;"/>' +
             '</div>' +
-                 '<div style="width:30px;float:left;border-bottom: 1px solid black;min-height:28px;">' +
+                 '<div style="width:40%;float:left;min-height:28px;">' +
                  '<input  id="itmChk ' + itemID + '" type="checkbox" name="cb' + itemID + '" ' + comp + ' onclick="checkChange(' + itemID + ')"/>' +
             '</div>' +
-            '<span style="font-size:9px;float:left;">' +
+            '<span style="font-size:9px;float:left;border-bottom: 1px solid black;width:100%; min-height:18px">' +
                   '<input class="btn btn-default" id="itemSave ' + itemID + '" type="button" value="Save Item" onclick="saveItem('+itemID+')" style="display:none; height:25px;font-size:12px">' +
                   '(<a  onclick="displayEdit('+itemID+')" href="javascript:void(0);">edit</a>)     ' +
                   '(<a onclick="deleteItem('+itemID+')" href="javascript:void(0);">delete</a>)' +
@@ -241,7 +241,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.todolistid)
 
-        <div class="form-group">
+        <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:4px 7px 2px 4px">
             <!--@Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })-->
             <div class="col-md-10">
                 <div id="deleteThisPage" style="float:right;">
@@ -258,7 +258,7 @@
                 <div><input id="titleBox" type="text" value="@Model.title" style="float:left;display:none;" /></div>
                 <input class="btn btn-default" id="titleEdit" type="button" value="Save..." onclick="titleEditSave()" style="float:left;display:none;">
                 <div id="titleDiv" style="font-weight:bold;font-size:28px;float:left;">@Model.title</div>
-                <div id="titleEditLink" style="font-size:8px;float:left;">(<a onclick="titleEditDisplay()" href="javascript:void(0);" >edit</a>)</div>
+                <div id="titleEditLink" style="font-size:9px;float:left;">(<a onclick="titleEditDisplay()" href="javascript:void(0);" >edit</a>)</div>
 
                 <br />
                 <br />
@@ -296,11 +296,11 @@
                                 }
                             }
                         </select>
-                    <input id="btnAddCategory" class="btn btn-default" type="button" value="Add Catagory" onclick="addCategory()" />
+                    <input id="btnAddCategory" class="btn btn-default" type="button" value="Add Category" onclick="addCategory()" />
                 </div>
                 @{using (Html.BeginForm())
                     {
-                        <input id ="btnAddClass" class="btn btn-default" type="button" value="Add Catagory" onclick="beginCatAdd()" />
+                        <input id ="btnAddClass" class="btn btn-default" type="button" value="Add Category" onclick="beginCatAdd()" />
                     }
                 }
                 
@@ -314,7 +314,7 @@
                 <div style="border-bottom-style:groove;">
                     <div style="width:20%;float:left;border-bottom-style:groove;">Title:</div>
                     <div style="width:40%;float:left;border-bottom-style:groove;">Description</div>
-                    <div style="width:90px;float:left;border-bottom-style:groove;clear:right;">Complete</div>
+                    <div style="width:40%;float:left;border-bottom-style:groove;">Complete</div>
                 </div>
                 <div id="itemsHolder"></div>
                 @{ 
@@ -338,7 +338,7 @@
                         <input type="text" id="newItemTitle" style="width:20%;" />
                         <input type="text" id="newItemDescription" style="width:40%;" />
                         </div>
-                    <div style="text-align:center;clear:left;width:60%;">
+                    <div style="text-align:left;clear:left;width:60%;min-height:28px">
                         
                             <input id="btnAddItem" class="btn btn-default" type="button" value="Save..." onclick="addItem()" style="display:none;"/>
                             <input id="btnCancelItem" class="btn btn-default" type="button" value="Cancel" onclick="cancelAddItem()" style="display:none;" />
