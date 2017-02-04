@@ -133,5 +133,33 @@ namespace TodoSite.Controllers
             db.SaveChanges();
             return catTo.categorytodolistid;      
         }
+
+        public int UpdateTitle(String title,String listID)
+        {
+            TodoList toList = db.TodoLists.Find(int.Parse(listID));
+            toList.title = title;
+            db.SaveChanges();
+            return toList.todolistid;
+        }
+
+        public ActionResult DeleteList(String listid)
+        {
+            int ID = int.Parse(listid);
+            TodoList toList = db.TodoLists.Find(int.Parse(listid));
+            var  catList = db.CategoryTodoLists.Where(L => L.todolistid == ID);
+            foreach(CategoryTodoList c in catList)
+            {
+                db.CategoryTodoLists.Remove(c);
+            }
+            var itmList = db.TodoItems.Where(L => L.todolistid == ID);
+            foreach(TodoItem i in itmList)
+            {
+                db.TodoItems.Remove(i);
+            }
+            db.TodoLists.Remove(toList);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }
