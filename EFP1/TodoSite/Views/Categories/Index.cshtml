@@ -70,6 +70,7 @@
         var urlInsert = '@Url.Action("Update","Categories")';
         $.post(urlInsert, { categoryid: catID, title: catTitle, description: catDescription },
             function (data) {
+                //window.alert(catTitle + " " + catDescription);
                 document.getElementById('txtTitle ' + catID).innerHTML = catTitle;
                 document.getElementById('txtDescription ' + catID).innerHTML = catDescription;
                 hideEdit(catID);
@@ -77,7 +78,8 @@
     }
 
     function deleteItem(catID) {
-        var urlInsert = '@Url.Action("Delete","Categories")';
+        //window.alert("entered functinon");
+        var urlInsert = '@Url.Action("DeleteCat","Categories")';
         $.post(urlInsert, { categoryid: catID }, function (data) {
             document.getElementById('itemsHolder').removeChild(document.getElementById("itmDiv " + catID));
         });
@@ -102,16 +104,18 @@
     function addItem() {
         var newTitle = document.getElementById('newItemTitle').value;
         var newDescription = document.getElementById('newItemDescription').value;
-        var myList = document.getElementById('todolistid').value;
 
         var urlInsert = '@Url.Action("Insert", "Categories")';
 
         $.get(urlInsert, { title: newTitle, description: newDescription }, function (data) {
-            var itmDiv = itemTemplete(data, newTitle, newDescription, 0)
+            var itmDiv = itemTemplete(data, newTitle, newDescription, 0);
             document.getElementById('itemsHolder').appendChild(itmDiv);
+
+            cancelAddItem();
+
         });
 
-        cancelAddItem();
+        
     }
 
     function titleEditDisplay() {
@@ -128,15 +132,7 @@
         document.getElementById('titleEditLink').style.display = '';
     }
 
-    function titleEditSave() {
-        var newTitle = document.getElementById('titleBox').value;
-        var myList = document.getElementById('todolistid').value;
-        var urlInsert = '@Url.Action("UpdateTitle", "Categories")';
-        $.post(urlInsert, { title: newTitle, listid: myList }, function (data) {
-            document.getElementById('titleDiv').innerHTML = newTitle;
-            titleEditHide();
-        });
-    }
+    
 
     function pageDeleteDisplay() {
         document.getElementById('delInitialBut').style.display = 'none';
@@ -150,14 +146,6 @@
         document.getElementById('delCancelBut').style.display = 'none';
         document.getElementById('delConfirmBut').style.display = 'none';
         document.getElementById('delConfirmMessage').style.display = 'none';
-    }
-
-    function pageDelete() {
-        var myList = document.getElementById('todolistid').value;
-        var urlInsert = '@Url.Action("DeleteList", "Categories")';
-        $.post(urlInsert, { listid: myList }, function (data) {
-            window.location = "..";
-        });
     }
 
 

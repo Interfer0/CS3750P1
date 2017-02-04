@@ -170,7 +170,7 @@
 
         $.get(urlInsert, { title: newTitle, description: newDescription, listid: myList }, function (data)
             {
-            var itmDiv = itemTemplete(data,newTitle,newDescription,0)
+            var itmDiv = itemTemplete(data,newTitle,newDescription,0);
             document.getElementById('itemsHolder').appendChild(itmDiv);
             });
 
