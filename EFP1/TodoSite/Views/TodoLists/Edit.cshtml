@@ -38,7 +38,7 @@
         var nowSelected = selected.options[selected.selectedIndex].value;
         var myList = document.getElementById('todolistid').value;
 
-        var urlInsert = '@Url.Action("Insert")';
+        var urlInsert = '@Url.Action("Insert", "CategoryTodoLists")';
 
         $.get(urlInsert, { listID: myList, catID: nowSelected }, function (data) { //run a get command to add the category to the list and get the resulting ID. -db
             var catDiv = document.createElement('div');
@@ -241,7 +241,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.todolistid)
 
-        <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:4px 7px 2px 4px">
+        <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:14px 7px 14px 4px">
             <!--@Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })-->
             <div class="col-md-10">
                 <div id="deleteThisPage" style="float:right;">
