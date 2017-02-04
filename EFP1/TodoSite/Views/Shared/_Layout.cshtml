@@ -7,7 +7,10 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
+
 <body>
+    
+    
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -17,13 +20,42 @@
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("To-do Site", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("TodoLists", "", "TodoLists")</li>
-                    <li>@Html.ActionLink("Categories", "", "Categories")</li>
-                </ul>
-            </div>
+            
+            <ul class="nav navbar-nav">
+                <li class="dropdown"><a class="dropdown-toggle" >Quick Edit:</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">To Do Lists
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu" id="listHolder">
+                    
+                            @{
+                                EF.Project1TodoEntities db = new EF.Project1TodoEntities();
+                                foreach (var c in db.TodoLists.ToList())
+                                {
+                                    <li value="@c.todolistid"><a href="@Url.Action(@c.todolistid.ToString(),"TodoLists/Edit")">@c.title</a></li>
+                                }
+                            }
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Categories
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+
+                        @{
+                            foreach (var c in db.Categories.ToList())
+                            {
+                                <li value="@c.categoryid"><a href="@Url.Action(@c.categoryid.ToString(),"Categories/Edit")">@c.title</a></li>
+                            }
+                        }
+                    </ul>
+                </li>
+
+            </ul>
         </div>
     </div>
     <div class="container body-content">
@@ -37,5 +69,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    
 </body>
 </html>
