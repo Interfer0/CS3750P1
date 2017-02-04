@@ -134,7 +134,7 @@ namespace TodoSite.Controllers
             base.Dispose(disposing);
         }
 
-        protected int Insert(String title, String description)
+        public int Insert(String title, String description)
         {
             Category cat = new Category();
             cat.title = title;
@@ -144,7 +144,7 @@ namespace TodoSite.Controllers
             return cat.categoryid;
         }
 
-        protected int Update(String categoryid, String title, String description)
+        public int Update(String categoryid, String title, String description)
         {
             Category cat = db.Categories.Find(int.Parse(categoryid));
             cat.title = title;
@@ -153,7 +153,7 @@ namespace TodoSite.Controllers
             return cat.categoryid; 
         }
 
-        protected int Delete(String categoryid)
+        public int DeleteCat(String categoryid)
         {
             Category cat = db.Categories.Find(int.Parse(categoryid));
             db.Categories.Remove(cat);
