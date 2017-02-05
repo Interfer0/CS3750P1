@@ -116,7 +116,16 @@
                                             for (var i = 0; i < numOfItems; i++)
                                             {
                                                 <li style="text-align:left">
-                                                    @Html.DisplayFor(modelItem => item.TodoItems.ToArray()[i].title)
+                                                    @if (item.TodoItems.ToArray()[i].complete == 1)
+                                                    {
+                                                        <b> @Html.DisplayFor(modelItem => item.TodoItems.ToArray()[i].title)</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DisplayFor(modelItem => item.TodoItems.ToArray()[i].title)
+
+                                                    }
+
                                                 </li>
 
                                             }
