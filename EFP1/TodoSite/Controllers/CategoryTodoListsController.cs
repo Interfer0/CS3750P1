@@ -20,7 +20,7 @@ namespace TodoSite.Controllers
             var categoryTodoLists = db.CategoryTodoLists.Include(c => c.Category).Include(c => c.TodoList);
             return View(categoryTodoLists.ToList());
         }
-
+        /*
         // GET: CategoryTodoLists/Details/5
         public ActionResult Details(int? id)
         {
@@ -132,7 +132,7 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
-
+        */
 
         public int Insert(String listID, String catID)
         {
