@@ -52,7 +52,7 @@ namespace TodoSite.Controllers
             {
                 db.TodoLists.Add(todoList);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit/"+todoList.todolistid.ToString());
             }
 
             return View(todoList);
