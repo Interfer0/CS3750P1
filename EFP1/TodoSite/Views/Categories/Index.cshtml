@@ -16,9 +16,9 @@
         var editDeleteString = '';
         
         if (parseInt(count) > 0) {
-            editDeleteString = '(<a  onclick="displayEdit(' + catID + ')" href="javascript:void(0);">edit</a>)     ';
+            editDeleteString = '<div id = "editButton ' + catID + '">(<a  onclick="displayEdit(' + catID + ')" href="javascript:void(0);">edit</a>)</div>     ';
         } else if (parseInt(count) == 0) {
-            editDeleteString = '(<a  onclick="displayEdit(' + catID + ')" href="javascript:void(0);">edit</a>)     ' +
+            editDeleteString = '<div id = "editButton ' + catID + '">(<a  onclick="displayEdit(' + catID + ')" href="javascript:void(0);">edit</a>)</div>     ' +
                   '(<a onclick="deleteItem(' + catID + ')" href="javascript:void(0);">delete</a>)';
         }
 
@@ -43,6 +43,7 @@
     }
 
     function displayEdit(catID) {
+        document.getElementById('editButton ' + catID).style.display = 'none';
         document.getElementById('txtTitle ' + catID).style.display = 'none';
         document.getElementById('txtDescription ' + catID).style.display = 'none';
         document.getElementById('txtBoxTitle ' + catID).style.display = '';
@@ -52,6 +53,7 @@
     }
 
     function hideEdit(catID) {
+        document.getElementById('editButton ' + catID).style.display = '';
         document.getElementById('txtTitle ' + catID).style.display = '';
         document.getElementById('txtDescription ' + catID).style.display = '';
         document.getElementById('txtBoxTitle ' + catID).style.display = 'none';
@@ -64,6 +66,15 @@
 
     function saveItem(catID) {
         var catTitle = document.getElementById('txtBoxTitle ' + catID).value;
+
+        if (catTitle.length == 0) {
+            window.alert("You must have a title");
+            document.getElementById("txtBoxTitle " + catID).style.borderColor = "red";
+            return;
+        }
+
+        document.getElementById("txtBoxTitle " + catID).style.borderColor = "";
+
         var catDescription = document.getElementById('txtBoxDescription ' + catID).value;
         console.log(catTitle + " " + catDescription);
         //window.alert(catTitle + " " + catDescription);
@@ -86,6 +97,7 @@
     }
 
     function cancelAddItem() {
+        document.getElementById('newItemTitle').style.borderColor = "";
         document.getElementById('newItemTitle').value = "";
         document.getElementById('newItemDescription').value = "";
         document.getElementById('newItemDiv').style.display = 'none';
@@ -104,6 +116,13 @@
     function addItem() {
         var newTitle = document.getElementById('newItemTitle').value;
         var newDescription = document.getElementById('newItemDescription').value;
+
+        if (newTitle.length == 0) {
+            window.alert("You must have a title");
+            document.getElementById('newItemTitle').style.borderColor = "red";
+            //document.getElementById('txtTitle ' + catID).style.borderColor = "red";
+            return;
+        }
 
         var urlInsert = '@Url.Action("Insert", "Categories")';
 
@@ -165,7 +184,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         
 
-        <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:4px 7px 7px 4px" >
+        <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:10px 15px 15px 15px" >
 
                 <h4>Add, remove, or edit your categories:</h4>
                 <div id="todoitems">

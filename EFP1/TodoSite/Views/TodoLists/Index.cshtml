@@ -17,23 +17,38 @@
       
         display: flex;
         flex-wrap: wrap;
-        align-content: center;
+        justify-content: flex-start;
         width: 100%;
+
      
     }
 
+    a {
+        color:black;
+    }
+    a:link {
+        text-decoration:none;
+        
+    }
+
     .singleList, .createNewList {
-        border-radius: 2px; 
-        border: 1px solid;
+      
         padding: 10px;
         margin: 10px;
         display: inline-block;
-        background: #ffe48c;
+        background: #FCF0AD;
         width: 300px;
         height: 300px;
-       
+        box-shadow: 10px 10px 5px #888888;
+        text-overflow:ellipsis;
+        overflow:hidden;
+        white-space: nowrap;
         text-align: center;
 
+    }
+
+    .singleList:hover, .createNewList:hover {
+        background: #fbe984;
     }
 
     .createNewList {
@@ -58,11 +73,6 @@
 
     }
 
-    .categories::-webkit-scrollbar-thumb {
-        :lightgoldenrodyellow;
-
-    }
-
     .container1 {
         display:flex;
         flex-direction:column;
@@ -72,10 +82,7 @@
 
     }
 
-
-    p {
-        color: blue;
-    }
+ 
 </style>
 
 
@@ -83,49 +90,54 @@
         <div class="listOfLists">
             @foreach (var item in Model)
             {
-                <div class="singleList">
-                    <h2>@Html.DisplayFor(modelItem => item.title)  </h2>
-                    
+                
+                    var myLink = "/TodoLists/Edit/" + item.todolistid.ToString();
+                 
 
-                    <div class="container1">
+                    <a href="@myLink">
+                        <div class="singleList">
+                            <h2>@Html.DisplayFor(modelItem => item.title)  </h2>
 
-                        <div class="categories">
-                            @{
-                                for (var i = 0; i < item.CategoryTodoLists.Count; i++)
-                                {
-                                    @Html.DisplayFor(modelItem => item.CategoryTodoLists.ToArray()[i].Category.title)<br />
-                                }
-                            }
+                            <div class="container1">
+
+                                <div class="categories">
+                                    @{
+                                        for (var i = 0; i < item.CategoryTodoLists.Count; i++)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.CategoryTodoLists.ToArray()[i].Category.title)<br />
+                                        }
+                                    }
+                                </div>
+
+                                <div class="topItems">
+                                    <ul>
+
+                                        @{var numOfItems = (item.TodoItems.Count <= 3) ? item.TodoItems.Count : 3;
+                                            for (var i = 0; i < numOfItems; i++)
+                                            {
+                                                <li style="text-align:left">
+                                                    @Html.DisplayFor(modelItem => item.TodoItems.ToArray()[i].title)
+                                                </li>
+
+                                            }
+                                        }
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="doStuff">
+
+                                @Html.ActionLink("View/Edit", "Edit", new { id = item.todolistid })
+                            </div>
+
                         </div>
-
-                    <div class="topItems">
-                        <ul>
-                            
-                        @{var numOfItems = (item.TodoItems.Count <= 3) ? item.TodoItems.Count : 3;
-                            for(var i = 0; i < numOfItems; i++)
-                            {
-                                <li style="text-align:left">
-                                @Html.DisplayFor(modelItem => item.TodoItems.ToArray()[i].title)
-                                 </li>
-
-                            }                  
-                    }
-                                                                                     
-                        </ul>
+                    </a>
+                                            }
+                        <div class="createNewList">
+                            @Html.ActionLink("+", "Create")
                         </div>
-                     
-                    
-                    </div>
-
-                    <div class="doStuff">
-                        
-                        @Html.ActionLink("View/Edit", "Edit", new { id = item.todolistid }) 
-                    </div>
-                </div>
-            }
-            <div class="createNewList">
-                @Html.ActionLink("+", "Create")
-            </div>
-        </div>
+</div>
    
 
