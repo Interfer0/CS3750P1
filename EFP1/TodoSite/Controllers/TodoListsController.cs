@@ -19,7 +19,7 @@ namespace TodoSite.Controllers
         {
             return View(db.TodoLists.ToList());
         }
-
+        /*
         // GET: TodoLists/Details/5
         public ActionResult Details(int? id)
         {
@@ -34,7 +34,7 @@ namespace TodoSite.Controllers
             }
             return View(todoList);
         }
-
+        */
         // GET: TodoLists/Create
         public ActionResult Create()
         {
@@ -57,7 +57,7 @@ namespace TodoSite.Controllers
 
             return View(todoList);
         }
-
+        
         // GET: TodoLists/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -88,7 +88,7 @@ namespace TodoSite.Controllers
             }
             return View(todoList);
         }
-
+        /*
         // GET: TodoLists/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -123,7 +123,7 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
-
+        */
 
 
         public int UpdateTitle(String title,String listID)

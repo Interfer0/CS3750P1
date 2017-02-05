@@ -20,7 +20,7 @@ namespace TodoSite.Controllers
             var categoryTodoLists = db.CategoryTodoLists.Include(c => c.Category).Include(c => c.TodoList);
             return View(categoryTodoLists.ToList());
         }
-
+        /*
         // GET: CategoryTodoLists/Details/5
         public ActionResult Details(int? id)
         {
@@ -132,14 +132,16 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
-
+        */
 
         public int Insert(String listID, String catID)
         {
-            var cats = db.CategoryTodoLists.Where(i => i.todolistid == int.Parse(listID));
-            //CategoryTodoList cats2 = cats.Where(e => e.categoryid == int.Parse(catID)).;
-            //if (cats2.categoryid == int.Parse(catID) && cats2.todolistid == int.Parse(listID))
-            //    return cats2.categorytodolistid;
+            int x = int.Parse(listID);
+            int y = int.Parse(catID);
+            var cats = db.CategoryTodoLists.Where(i => i.todolistid == x && i.categoryid == y);
+            var existcount = cats.Count();
+            if (existcount > 0)
+                return cats.ToList()[0].categorytodolistid;
             CategoryTodoList catTo = new CategoryTodoList();
             catTo.categoryid = int.Parse(catID);
             catTo.todolistid = int.Parse(listID);

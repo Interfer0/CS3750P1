@@ -3,36 +3,49 @@
 }
 
 <div class="jumbotron">
-    <h1>To Do Lists - Group 4</h1>
+    <h2 style="text-align:center;">To Do Lists - CS 3750 - Group 4</h2>
 </div>
-
-<div>
+<div style="border:solid;padding:10px;">
+<div style="padding:10px;">
     <h3>
         Requirements:
     </h3>
     <p>
-        CRUD To Do Lists with CRUD To Do List items (or none). CRUD Categories that To Do Lists can select and add as a attribute.
+        In this project, we will be creating a simple CMS that can be used to manage to-do lists. 
+        This is meant to be a simple project that will get us used to the steps and procedures we’ll 
+        need to use throughout CS 3750 and in the job field. This will 
+        primarily mean following the Application Life Cycle (or Software Development Life Cycle) to 
+        discover the requirements for the project, and then to implement what we have discovered.
+    </p>
+    <p>
+        This project is created using Entity Framework and MVC to perform CRUD operations in order 
+        to manage the list, categories, and items. Our database is implemented on Microsoft SQL 2014. 
     </p>
 </div>
 
-<div class="row" >
-    <div class="col-md-4" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; width: 200px; padding-bottom: 10px; margin-right: 10px">
+<div class="row" style="padding:10px;" >
+    <div class="col-md-4" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; width: 200px; padding-bottom: 10px; margin-left: 50px;">
         <h2>To Do Lists</h2>
         <p>Collection of To Do Lists</p>
-        <p><input type="button" value="Access Lists" onclick="location.href='@Url.Action("Index", "TodoLists")'" /></p>
+        <p><input class="btn btn-default" type="button" value="Access Lists" onclick="location.href='@Url.Action("Index", "TodoLists")'" /></p>
     </div>
-    <div class="col-md-4" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; width: 200px; padding-bottom:10px;">
+    <div class="col-md-4" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; width: 200px; padding-bottom:10px;margin-left: 50px;">
         <h2>List Categories</h2>
         <p>Collection of Current Categories</p>
-        <p><input type="button" value="Access Categories" onclick="location.href='@Url.Action("Index", "Categories")'"/></p>
+        <p><input class="btn btn-default" type="button" value="Access Categories" onclick="location.href='@Url.Action("Index", "Categories")'"/></p>
     </div>
 </div>
 
-<div>
+<div style="padding:10px;">
     <h4>
         Team Members:
     </h4>
     <p>
-        Daniel Bigelow, Cade Kynaston, Justin Messenger, Nelson Muhlestein, Wesley Smith
+        <a href="http://www.Danielbigelow.com" >Daniel Bigelow</a>, 
+        <a href="https://github.com/cadekynaston" >Cade Kynaston</a>, 
+        <a href="https://github.com/messengerja">Justin Messenger</a>, 
+        <a href="https://github.com/nelsonmuhlestein">Nelson Muhlestein</a>, 
+        <a href="https://github.com/wesleysmith1" >Wesley Smith</a>
     </p>
+</div>
 </div>
