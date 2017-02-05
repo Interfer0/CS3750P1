@@ -27,33 +27,40 @@
 
     //Hide add category button and display dropdown list of categories -db
     function beginCatAdd() {
+
         document.getElementById('btnAddClass').style.display = 'none';
-        document.getElementById('addCategory').style.display = '';
+        document.getElementById('addCategoryDiv').style.display = '';
+
     };
 
     //Add the category to the list in database, add categoy to list in display -db
     function addCategory()
     {
-        var selected = document.getElementById('selectedCategory');
+
+        var selected = document.getElementById('categorySelected');
         var nowSelected = selected.options[selected.selectedIndex].value;
-        var myList = document.getElementById('todolistid').value;
+        if (nowSelected != -1) {
+            var myList = document.getElementById('todolistid').value;
 
-        var urlInsert = '@Url.Action("Insert", "CategoryTodoLists")';
+            var urlInsert = '@Url.Action("Insert", "CategoryTodoLists")';
 
-        $.get(urlInsert, { listID: myList, catID: nowSelected }, function (data) { //run a get command to add the category to the list and get the resulting ID. -db
-            var catDiv = document.createElement('div');
-            catDiv.id = "catDiv " + data;
-            catDiv.style.width = "20%";
-            catDiv.innerHTML =      selected.options[selected.selectedIndex].label +
-                                    '<span style="font-size:9px;">' +
-                                        '(<a  onclick="deleteCat(' + nowSelected + ',' + data + ')"href="javascript:void(0);">delete</a>)' +
-                                    '</span>';
-            document.getElementById('categories').appendChild(catDiv); //add the item to the list display -db
-        });
+            $.get(urlInsert, { listID: myList, catID: nowSelected }, function (data) { //run a get command to add the category to the list and get the resulting ID. -db
+                if (document.getElementById('catDiv ' + data) == null) {
+                    var catDiv = document.createElement('div');
+                    catDiv.id = "catDiv " + data;
+                    catDiv.style.width = "20%";
+                    catDiv.innerHTML = selected.options[selected.selectedIndex].label +
+                                            '<span style="font-size:9px;">' +
+                                                '(<a  onclick="deleteCat(' + nowSelected + ',' + data + ')"href="javascript:void(0);">delete</a>)' +
+                                            '</span>';
+                    document.getElementById('categories').appendChild(catDiv); //add the item to the list display -db
+                }
+            });
 
-        document.getElementById('btnAddClass').style.display = '';
-        document.getElementById('addCategory').style.display = 'none';
-    };
+            document.getElementById('btnAddClass').style.display = '';
+            document.getElementById('addCategoryDiv').style.display = 'none';
+        }
+    }
 
     function itemTemplete(itemID,itemTitle,itemDescription, itemCompleted)
     {
@@ -272,9 +279,8 @@
                     {
                         <div id="catDiv @cat.categorytodolistid" width:20%;">
                         @cat.Category.title 
-                        <!--Add delete button here-->
                             <span style="font-size:9px;">
-                                (<a  onclick="deleteCat(@cat.categoryid,@cat.categorytodolistid)"href="javascript:void(0);">delete</a>)
+                                (<a  onclick="deleteCat(@cat.categoryid,@cat.categorytodolistid)" href="javascript:void(0);">delete</a>)
                             </span>
                         </div>
 
@@ -285,9 +291,9 @@
 
                 </div><br />
                 <!-- button to add category-->
-                <div id="addCategory" style="display:none;">
-                        <select id="selectedCategory">
-                            <option disabled selected="selected">Select an option...</option>
+                <div id="addCategoryDiv" style="display:none;">
+                        <select id="categorySelected">
+                            <option disabled selected="selected" value="-1">Select an option...</option>
                             @{
                                 EF.Project1TodoEntities db = new EF.Project1TodoEntities();
                                 foreach (var c in db.Categories.ToList())
