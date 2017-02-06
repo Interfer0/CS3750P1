@@ -34,7 +34,7 @@ namespace TodoSite.Controllers
             }
             return View(category);
         }
-
+        /*
         // GET: Categories/Create
         public ActionResult Create()
         {
@@ -57,7 +57,7 @@ namespace TodoSite.Controllers
 
             return View(category);
         }
-
+        */
         // GET: Categories/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -88,7 +88,7 @@ namespace TodoSite.Controllers
             }
             return View(category);
         }
-
+        /*
         // GET: Categories/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -124,7 +124,7 @@ namespace TodoSite.Controllers
                 .Count()).ToString()
                 );
         }
-
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -133,5 +133,34 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
+
+        */
+        public int Insert(String title, String description)
+        {
+            Category cat = new Category();
+            cat.title = title;
+            cat.description = description;
+            db.Categories.Add(cat);
+            db.SaveChanges();
+            return cat.categoryid;
+        }
+
+        public int Update(String categoryid, String title, String description)
+        {
+            Category cat = db.Categories.Find(int.Parse(categoryid));
+            cat.title = title;
+            cat.description = description;
+            db.SaveChanges();
+            return cat.categoryid; 
+        }
+
+        public int DeleteCat(String categoryid)
+        {
+            Category cat = db.Categories.Find(int.Parse(categoryid));
+            db.Categories.Remove(cat);
+            db.SaveChanges();
+            return int.Parse(categoryid);
+        }
+
     }
 }

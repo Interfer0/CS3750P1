@@ -20,7 +20,7 @@ namespace TodoSite.Controllers
             var todoItems = db.TodoItems.Include(t => t.TodoList);
             return View(todoItems.ToList());
         }
-
+        /*
         // GET: TodoItems/Details/5
         public ActionResult Details(int? id)
         {
@@ -128,7 +128,7 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
-
+        */
         public int Insert(String title, String description, String listid)
         {
             TodoItem toItem = new TodoItem();

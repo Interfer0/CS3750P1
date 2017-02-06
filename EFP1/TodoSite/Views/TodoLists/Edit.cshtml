@@ -20,40 +20,47 @@
                 element.parentNode.removeChild(element); //remove cat frome category -db
             },
             error: function (request, message, error) {
-                Console.log("failure");
+               console.log("failure");
             }
         });
     };
 
     //Hide add category button and display dropdown list of categories -db
     function beginCatAdd() {
+
         document.getElementById('btnAddClass').style.display = 'none';
-        document.getElementById('addCategory').style.display = '';
+        document.getElementById('addCategoryDiv').style.display = '';
+
     };
 
     //Add the category to the list in database, add categoy to list in display -db
     function addCategory()
     {
-        var selected = document.getElementById('selectedCategory');
+
+        var selected = document.getElementById('categorySelected');
         var nowSelected = selected.options[selected.selectedIndex].value;
-        var myList = document.getElementById('todolistid').value;
+        if (nowSelected != -1) {
+            var myList = document.getElementById('todolistid').value;
 
-        var urlInsert = '@Url.Action("Insert")';
+            var urlInsert = '@Url.Action("Insert", "CategoryTodoLists")';
 
-        $.get(urlInsert, { listID: myList, catID: nowSelected }, function (data) { //run a get command to add the category to the list and get the resulting ID. -db
-            var catDiv = document.createElement('div');
-            catDiv.id = "catDiv " + data;
-            catDiv.style.width = "20%";
-            catDiv.innerHTML =      selected.options[selected.selectedIndex].label +
-                                    '<span style="font-size:9px;">' +
-                                        '(<a  onclick="deleteCat(' + nowSelected + ',' + data + ')"href="javascript:void(0);">delete</a>)' +
-                                    '</span>';
-            document.getElementById('categories').appendChild(catDiv); //add the item to the list display -db
-        });
+            $.get(urlInsert, { listID: myList, catID: nowSelected }, function (data) { //run a get command to add the category to the list and get the resulting ID. -db
+                if (document.getElementById('catDiv ' + data) == null) {
+                    var catDiv = document.createElement('div');
+                    catDiv.id = "catDiv " + data;
+                    catDiv.style.width = "20%";
+                    catDiv.innerHTML = selected.options[selected.selectedIndex].label +
+                                            '<span style="font-size:9px;">' +
+                                                '(<a  onclick="deleteCat(' + nowSelected + ',' + data + ')"href="javascript:void(0);">delete</a>)' +
+                                            '</span>';
+                    document.getElementById('categories').appendChild(catDiv); //add the item to the list display -db
+                }
+            });
 
-        document.getElementById('btnAddClass').style.display = '';
-        document.getElementById('addCategory').style.display = 'none';
-    };
+            document.getElementById('btnAddClass').style.display = '';
+            document.getElementById('addCategoryDiv').style.display = 'none';
+        }
+    }
 
     function itemTemplete(itemID,itemTitle,itemDescription, itemCompleted)
     {
@@ -62,22 +69,26 @@
             comp = "checked";
         var itemDiv = document.createElement('div');
         itemDiv.id = "itmDiv " + itemID;
-        itemDiv.innerHTML = '<div style="width:20%;float:left;clear:left;border-bottom: 1px solid black;height:20px;">' +
-                               itemTitle +
-                            '</div>' +
-                            '<div style="width:40%;min-height:3px;float:left;border-bottom: 1px solid black;height:20px;">' +
-                                itemDescription + ''+
-                            '</div>' +
-                            '<div style="width:30px;float:left;border-bottom: 1px solid black;height:20px;">' +
-                                '<input type="checkbox" name="cb' +
-                                itemID + '" ' +
-                                comp +
-                                '/>' +
-                            '</div>' +
-                            '<span style="font-size:9px;float:left;">' +
-                            '(<a  onclick="test" href="javascript:void(0);">edit</a>)     ' +
-                            '(<a onclick="deleteItem('+itemID+')" href="javascript:void(0);">delete</a>)' +
-                            '</span>'
+
+        itemDiv.style.verticalAlign = 'center';
+        itemDiv.innerHTML =            
+            '<div style="width:20%;float:left;clear:left;min-height:28px;">' +
+                '<div id="txtTitle ' + itemID + '">' + itemTitle + '</div><input id="txtBoxTitle ' +
+                    itemID + '" value="' + itemTitle + '" style="display:none;"/>' +
+            '</div>' +
+                '<div style="width:40%;min-height:3px;float:left;min-height:28px;">' +
+            '<div id="txtDescription ' + itemID + '">' + itemDescription + '</div><input id="txtBoxDescription ' +
+                itemID + '" value="' + itemDescription + '" style="display:none;"/>' +
+            '</div>' +
+                 '<div style="width:40%;float:left;min-height:28px;">' +
+                 '<input  id="itmChk ' + itemID + '" type="checkbox" name="cb' + itemID + '" ' + comp + ' onclick="checkChange(' + itemID + ')"/>' +
+            '</div>' +
+            '<span style="font-size:9px;float:left;border-bottom: 1px solid black;width:100%; min-height:18px">' +
+                  '<input class="btn btn-default" id="itemSave ' + itemID + '" type="button" value="Save Item" onclick="saveItem('+itemID+')" style="display:none; height:25px;font-size:12px">' +
+                  '(<a  onclick="displayEdit('+itemID+')" href="javascript:void(0);">edit</a>)     ' +
+                  '(<a onclick="deleteItem('+itemID+')" href="javascript:void(0);">delete</a>)' +
+             '</span>'
+
         ;
         return itemDiv;
     }
@@ -138,13 +149,19 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.todolistid)
 
-        <div class="form-group">
+        <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:14px 7px 14px 4px">
             <!--@Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })-->
             <div class="col-md-10">
                 Title:
                 <!-- title label -->
                 <!-- textbox for title --> 
-               @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+
+                
+                <div><input id="titleBox" type="text" value="@Model.title" style="float:left;display:none;" /></div>
+                <input class="btn btn-default" id="titleEdit" type="button" value="Save..." onclick="titleEditSave()" style="float:left;display:none;">
+                <div id="titleDiv" style="font-weight:bold;font-size:28px;float:left;">@Model.title</div>
+                <div id="titleEditLink" style="font-size:9px;float:left;">(<a onclick="titleEditDisplay()" href="javascript:void(0);" >edit</a>)</div>
+
 
                 <br />
                 Categories:<div id="categories">
@@ -156,9 +173,8 @@
                     {
                         <div id="catDiv @cat.categorytodolistid" width:20%;">
                         @cat.Category.title 
-                        <!--Add delete button here-->
                             <span style="font-size:9px;">
-                                (<a  onclick="deleteCat(@cat.categoryid,@cat.categorytodolistid)"href="javascript:void(0);">delete</a>)
+                                (<a  onclick="deleteCat(@cat.categoryid,@cat.categorytodolistid)" href="javascript:void(0);">delete</a>)
                             </span>
                         </div>
 
@@ -169,9 +185,9 @@
 
                 </div><br />
                 <!-- button to add category-->
-                <div id="addCategory" style="display:none;">
-                        <select id="selectedCategory">
-                            <option disabled selected="selected">Select an option...</option>
+                <div id="addCategoryDiv" style="display:none;">
+                        <select id="categorySelected">
+                            <option disabled selected="selected" value="-1">Select an option...</option>
                             @{
                                 EF.Project1TodoEntities db = new EF.Project1TodoEntities();
                                 foreach (var c in db.Categories.ToList())
@@ -180,11 +196,11 @@
                                 }
                             }
                         </select>
-                    <input id="btnAddCategory" class="btn btn-default" type="button" value="Add Catagory" onclick="addCategory()" />
+                    <input id="btnAddCategory" class="btn btn-default" type="button" value="Add Category" onclick="addCategory()" />
                 </div>
                 @{using (Html.BeginForm())
                     {
-                        <input id ="btnAddClass" class="btn btn-default" type="button" value="Add Catagory" onclick="beginCatAdd()" />
+                        <input id ="btnAddClass" class="btn btn-default" type="button" value="Add Category" onclick="beginCatAdd()" />
                     }
                 }
 
@@ -197,7 +213,7 @@
                 <div style="border-bottom-style:groove;">
                     <div style="width:20%;float:left;border-bottom-style:groove;">Title:</div>
                     <div style="width:40%;float:left;border-bottom-style:groove;">Description</div>
-                    <div style="width:90px;float:left;border-bottom-style:groove;clear:right;">Complete</div>
+                    <div style="width:40%;float:left;border-bottom-style:groove;">Complete</div>
                 </div>
                 <div id="itemsHolder"></div>
                 @{ 
@@ -221,7 +237,7 @@
                         <input type="text" id="newItemTitle" style="width:20%;" />
                         <input type="text" id="newItemDescription" style="width:40%;" />
                         </div>
-                    <div style="text-align:center;clear:left;width:60%;">
+                    <div style="text-align:left;clear:left;width:60%;min-height:28px">
                         
                             <input id="btnAddItem" class="btn btn-default" type="button" value="Save..." onclick="addItem()" style="display:none;"/>
                             <input id="btnCancelItem" class="btn btn-default" type="button" value="Cancel" onclick="cancelAddItem()" style="display:none;" />

@@ -5,56 +5,203 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.description)
-        </th>
-        <th>
-            Test
-        </th>
+<h2>Categories</h2>
 
-        <th></th>
-    </tr>
+<script>
 
-@foreach (var item in Model) {
-    
-    <tr style="background-color:darkgoldenrod;">
-        <td>
 
-            @Html.TextBox("test", item.title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.description)
-        </td>
-        <td>
+    function itemTemplete(catID, catTitle, catDescription, count) {
+        var comp = "checked";
+        var itemDiv = document.createElement('div');
+        var editDeleteString = '';
+        
+        if (parseInt(count) > 0) {
+            editDeleteString = '<div id = "editButton ' + catID + '">(<a  onclick="displayEdit(' + catID + ')" href="javascript:void(0);">edit</a>)</div>     ';
+        } else if (parseInt(count) == 0) {
+            editDeleteString = '<div id = "editButton ' + catID + '">(<a  onclick="displayEdit(' + catID + ')" href="javascript:void(0);">edit</a>)</div>     ' +
+                  '(<a onclick="deleteItem(' + catID + ')" href="javascript:void(0);">delete</a>)';
+        }
 
-            @{ 
-                var test = item.CategoryTodoLists.Count;
-                //var test = Html.Action("getUseCount", item);
-            }
-            @test
-        </td>
+        itemDiv.id = "itmDiv " + catID;
+        itemDiv.style.verticalAlign = 'center';
+        itemDiv.innerHTML = 
+            '<div style="width:20%;float:left;clear:left;border-bottom: 1px solid black;min-height:28px;">' +
+                '<div id="txtTitle ' + catID + '">' + catTitle + '</div><input id="txtBoxTitle ' +
+                    catID + '" value="' + catTitle + '" style="display:none;"/>' +
+            '</div>' +
+                '<div style="width:40%;min-height:3px;float:left;border-bottom: 1px solid black;min-height:28px;">' +
+            '<div id="txtDescription ' + catID + '">' + catDescription + '</div><input id="txtBoxDescription ' +
+                catID + '" value="' + catDescription + '" style="display:none;"/>' +
+            '</div>' +
+                 '<div style="width:90px;float:left;border-bottom: 1px solid black;min-height:28px;">' + count + 
+            '</div>' +
+            '<span style="font-size:9px;float:left;">' +
+                  '<input class="btn btn-default" id="itemSave ' + catID + '" type="button" value="Save Item" onclick="saveItem(' + catID + ')" style="display:none; height:25px;font-size:12px">' + editDeleteString +
+             '</span>'
+        ;
+        return itemDiv;
+    }
 
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.categoryid })
-            @{
-                if (int.Parse(test.ToString()) == 0)
-                {
-                    @Html.ActionLink("Delete", "Delete", new { id = item.categoryid });
+    function displayEdit(catID) {
+        document.getElementById('editButton ' + catID).style.display = 'none';
+        document.getElementById('txtTitle ' + catID).style.display = 'none';
+        document.getElementById('txtDescription ' + catID).style.display = 'none';
+        document.getElementById('txtBoxTitle ' + catID).style.display = '';
+        document.getElementById('txtBoxDescription ' + catID).style.display = '';
+        document.getElementById('itemSave ' + catID).style.display = '';
+
+    }
+
+    function hideEdit(catID) {
+        document.getElementById('editButton ' + catID).style.display = '';
+        document.getElementById('txtTitle ' + catID).style.display = '';
+        document.getElementById('txtDescription ' + catID).style.display = '';
+        document.getElementById('txtBoxTitle ' + catID).style.display = 'none';
+        document.getElementById('txtBoxDescription ' + catID).style.display = 'none';
+        document.getElementById('itemSave ' + catID).style.display = 'none';
+        document.getElementById('txtBoxTitle ' + catID).value = document.getElementById('txtTitle ' + catID).innerHTML;
+        document.getElementById('txtBoxDescription ' + catID).value = document.getElementById('txtDescription ' + catID).innerHTML;
+    }
+
+
+    function saveItem(catID) {
+        var catTitle = document.getElementById('txtBoxTitle ' + catID).value;
+
+        if (catTitle.length == 0) {
+            window.alert("You must have a title");
+            document.getElementById("txtBoxTitle " + catID).style.borderColor = "red";
+            return;
+        }
+
+        document.getElementById("txtBoxTitle " + catID).style.borderColor = "";
+
+        var catDescription = document.getElementById('txtBoxDescription ' + catID).value;
+        console.log(catTitle + " " + catDescription);
+        //window.alert(catTitle + " " + catDescription);
+        var urlInsert = '@Url.Action("Update","Categories")';
+        $.post(urlInsert, { categoryid: catID, title: catTitle, description: catDescription },
+            function (data) {
+                //window.alert(catTitle + " " + catDescription);
+                document.getElementById('txtTitle ' + catID).innerHTML = catTitle;
+                document.getElementById('txtDescription ' + catID).innerHTML = catDescription;
+                hideEdit(catID);
+            });
+    }
+
+    function deleteItem(catID) {
+        //window.alert("entered functinon");
+        var urlInsert = '@Url.Action("DeleteCat","Categories")';
+        $.post(urlInsert, { categoryid: catID }, function (data) {
+            document.getElementById('itemsHolder').removeChild(document.getElementById("itmDiv " + catID));
+        });
+    }
+
+    function cancelAddItem() {
+        document.getElementById('newItemTitle').style.borderColor = "";
+        document.getElementById('newItemTitle').value = "";
+        document.getElementById('newItemDescription').value = "";
+        document.getElementById('newItemDiv').style.display = 'none';
+        document.getElementById('btnAddItem').style.display = 'none';
+        document.getElementById('btnCancelItem').style.display = 'none';
+        document.getElementById('btnAddItemEmpty').style.display = '';
+    }
+
+    function beginItemAdd() {
+        document.getElementById('newItemDiv').style.display = '';
+        document.getElementById('btnAddItem').style.display = '';
+        document.getElementById('btnCancelItem').style.display = '';
+        document.getElementById('btnAddItemEmpty').style.display = 'none';
+    }
+
+    function addItem() {
+        var newTitle = document.getElementById('newItemTitle').value;
+        var newDescription = document.getElementById('newItemDescription').value;
+
+        if (newTitle.length == 0) {
+            window.alert("You must have a title");
+            document.getElementById('newItemTitle').style.borderColor = "red";
+            //document.getElementById('txtTitle ' + catID).style.borderColor = "red";
+            return;
+        }
+
+        var urlInsert = '@Url.Action("Insert", "Categories")';
+
+        $.get(urlInsert, { title: newTitle, description: newDescription }, function (data) {
+            var itmDiv = itemTemplete(data, newTitle, newDescription, 0);
+            document.getElementById('itemsHolder').appendChild(itmDiv);
+
+            cancelAddItem();
+
+        });
+
+        
+    }
+
+
+</script>
+
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+
+        <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:10px 15px 15px 15px" >
+
+                <h4>Add, remove, or edit your categories:</h4>
+                <div id="todoitems">
+                    <!-- for each list to add todo items -->
+                    <div>
+                        <div style="width:20%;float:left;border-bottom-style:groove;">Title:</div>
+                        <div style="width:40%;float:left;border-bottom-style:groove;">Description</div>
+                        <div style="width:90px;float:left;border-bottom-style:groove;clear:right;">Instances</div>
+                    </div>
+                    <div id="itemsHolder"></div>
+                    @{
+
+
+                        foreach (var item in Model)
+                        {
+                            <script>
+                            var thisItem = itemTemplete('@item.categoryid','@item.title','@item.description ', '@item.CategoryTodoLists.Count');
+                            document.getElementById('itemsHolder').appendChild(thisItem);   
+                            </script>
+
+                            <br />
                         }
                     }
-        </td>
-    </tr>
-    
+
+
+                    <div id="newItemDiv" style="display:none;clear:left;">
+
+                        <input type="text" id="newItemTitle" style="width:20%;" />
+                        <input type="text" id="newItemDescription" style="width:40%;" />
+
+                    </div>
+
+                    <div style="text-align:center;clear:left;width:60%;padding-top:8px">
+
+                        <input id="btnAddItem" class="btn btn-default" type="button" value="Save..." onclick="addItem()" style="display:none;" />
+                        <input id="btnCancelItem" class="btn btn-default" type="button" value="Cancel" onclick="cancelAddItem()" style="display:none;" />
+                        <input id="btnAddItemEmpty" class="btn btn-default" type="button" value="Create Category" onclick="beginItemAdd()" />
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
 }
 
 </table>

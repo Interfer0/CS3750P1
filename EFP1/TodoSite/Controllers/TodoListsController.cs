@@ -19,7 +19,7 @@ namespace TodoSite.Controllers
         {
             return View(db.TodoLists.ToList());
         }
-
+        /*
         // GET: TodoLists/Details/5
         public ActionResult Details(int? id)
         {
@@ -34,7 +34,7 @@ namespace TodoSite.Controllers
             }
             return View(todoList);
         }
-
+        */
         // GET: TodoLists/Create
         public ActionResult Create()
         {
@@ -50,14 +50,16 @@ namespace TodoSite.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (todoList.title == null)
+                    todoList.title = "not named";
                 db.TodoLists.Add(todoList);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit/"+todoList.todolistid.ToString());
             }
 
             return View(todoList);
         }
-
+        
         // GET: TodoLists/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -88,7 +90,7 @@ namespace TodoSite.Controllers
             }
             return View(todoList);
         }
-
+        /*
         // GET: TodoLists/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -123,15 +125,37 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
+        */
 
-        public int Insert(String listID, String catID)
+
+
+        public int UpdateTitle(String title,String listID)
         {
-            CategoryTodoList catTo = new CategoryTodoList();
-            catTo.categoryid = int.Parse(catID);
-            catTo.todolistid = int.Parse(listID);
-            db.CategoryTodoLists.Add(catTo);
+            TodoList toList = db.TodoLists.Find(int.Parse(listID));
+            toList.title = title;
             db.SaveChanges();
-            return catTo.categorytodolistid;      
+            return toList.todolistid;
+        }
+
+        public ActionResult DeleteList(String listid)
+        {
+            int ID = int.Parse(listid);
+            TodoList toList = db.TodoLists.Find(int.Parse(listid));
+            var  catList = db.CategoryTodoLists.Where(L => L.todolistid == ID);
+            foreach(CategoryTodoList c in catList)
+            {
+                db.CategoryTodoLists.Remove(c);
+            }
+            var itmList = db.TodoItems.Where(L => L.todolistid == ID);
+            foreach(TodoItem i in itmList)
+            {
+                db.TodoItems.Remove(i);
+            }
+            db.TodoLists.Remove(toList);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+
         }
     }
 }
