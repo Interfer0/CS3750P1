@@ -128,6 +128,7 @@ namespace TodoSite.Controllers
         */
 
 
+
         public int UpdateTitle(String title,String listID)
         {
             TodoList toList = db.TodoLists.Find(int.Parse(listID));
@@ -154,6 +155,7 @@ namespace TodoSite.Controllers
             db.SaveChanges();
 
             return RedirectToAction("Index");
+
         }
     }
 }

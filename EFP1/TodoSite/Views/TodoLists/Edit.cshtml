@@ -69,6 +69,7 @@
             comp = "checked";
         var itemDiv = document.createElement('div');
         itemDiv.id = "itmDiv " + itemID;
+
         itemDiv.style.verticalAlign = 'center';
         itemDiv.innerHTML =            
             '<div style="width:20%;float:left;clear:left;min-height:28px;">' +
@@ -87,58 +88,9 @@
                   '(<a  onclick="displayEdit('+itemID+')" href="javascript:void(0);">edit</a>)     ' +
                   '(<a onclick="deleteItem('+itemID+')" href="javascript:void(0);">delete</a>)' +
              '</span>'
+
         ;
         return itemDiv;
-    }
-
-    function displayEdit(itemID)
-    {
-        document.getElementById('txtTitle ' + itemID).style.display = 'none';
-        document.getElementById('txtDescription ' + itemID).style.display = 'none';
-        document.getElementById('txtBoxTitle ' + itemID).style.display = '';
-        document.getElementById('txtBoxDescription ' + itemID).style.display = '';
-        document.getElementById('itemSave ' + itemID).style.display = '';
-
-    }
-
-    function hideEdit(itemID) {
-        document.getElementById('txtTitle ' + itemID).style.display = '';
-        document.getElementById('txtDescription ' + itemID).style.display = '';
-        document.getElementById('txtBoxTitle ' + itemID).style.display = 'none';
-        document.getElementById('txtBoxDescription ' + itemID).style.display = 'none';
-        document.getElementById('itemSave ' + itemID).style.display = 'none';
-        document.getElementById('txtBoxTitle ' + itemID).value = document.getElementById('txtTitle ' + itemID).innerHTML;
-        document.getElementById('txtBoxDescription ' + itemID).value = document.getElementById('txtDescription ' + itemID).innerHTML;
-    }
-
-
-    function saveItem(itemID)
-    {
-        var itemtitle = document.getElementById('txtBoxTitle ' + itemID).value;
-        var itemdescription = document.getElementById('txtBoxDescription ' + itemID).value;
-        console.log(itemtitle +" " + itemdescription);
-        var urlInsert = '@Url.Action("updateItem","TodoItems")';
-        $.post(urlInsert, { itemId: itemID, itemTitle: itemtitle, itemDescription: itemdescription },
-            function (data) {
-                document.getElementById('txtTitle ' + itemID).innerHTML = itemtitle;
-                document.getElementById('txtDescription ' + itemID).innerHTML = itemdescription;
-                hideEdit(itemID);
-            });
-    }
-
-    function checkChange(itemID)
-    {
-        var chkBox = document.getElementById("itmChk " + itemID);
-        if(chkBox.checked)
-        {
-            var urlInsert = '@Url.Action("checkItem","TodoItems")';
-            $.post(urlInsert, { itemid: itemID , isChecked: 1}, function (data) {});
-        }
-        else
-        {
-            var urlInsert = '@Url.Action("checkItem","TodoItems")';
-            $.post(urlInsert, { itemid: itemID, isChecked: 0 }, function (data) {});
-        }     
     }
 
     function deleteItem(itemID)
@@ -147,6 +99,7 @@
         $.post(urlInsert, { itemid: itemID}, function (data) {
             document.getElementById('itemsHolder').removeChild(document.getElementById("itmDiv "+itemID));
         });
+
     }
 
     function cancelAddItem()
@@ -177,63 +130,11 @@
 
         $.get(urlInsert, { title: newTitle, description: newDescription, listid: myList }, function (data)
             {
-            var itmDiv = itemTemplete(data,newTitle,newDescription,0);
+            var itmDiv = itemTemplete(data,newTitle,newDescription,0)
             document.getElementById('itemsHolder').appendChild(itmDiv);
             });
 
         cancelAddItem();
-    }
-
-    function titleEditDisplay()
-    {
-        document.getElementById('titleBox').style.display = '';
-        document.getElementById('titleEdit').style.display = '';
-        document.getElementById('titleDiv').style.display = 'none';
-        document.getElementById('titleEditLink').style.display = 'none';
-    }
-
-    function titleEditHide()
-    {
-        document.getElementById('titleBox').style.display = 'none';
-        document.getElementById('titleEdit').style.display = 'none';
-        document.getElementById('titleDiv').style.display = '';
-        document.getElementById('titleEditLink').style.display = '';
-    }
-
-    function titleEditSave()
-    {
-        var newTitle = document.getElementById('titleBox').value;
-        var myList = document.getElementById('todolistid').value;
-        var urlInsert = '@Url.Action("UpdateTitle","TodoLists")';
-        $.post(urlInsert, { title: newTitle, listid: myList }, function (data) {
-            document.getElementById('titleDiv').innerHTML = newTitle;
-            titleEditHide();
-        });
-    }
-
-    function pageDeleteDisplay()
-    {
-        document.getElementById('delInitialBut').style.display = 'none';
-        document.getElementById('delCancelBut').style.display = '';
-        document.getElementById('delConfirmBut').style.display = '';
-        document.getElementById('delConfirmMessage').style.display = '';
-    }
-
-    function pageDeleteHide()
-    {
-        document.getElementById('delInitialBut').style.display = '';
-        document.getElementById('delCancelBut').style.display = 'none';
-        document.getElementById('delConfirmBut').style.display = 'none';
-        document.getElementById('delConfirmMessage').style.display = 'none';
-    }
-
-    function pageDelete()
-    {
-        var myList = document.getElementById('todolistid').value;
-        var urlInsert = '@Url.Action("DeleteList","TodoLists")';
-        $.post(urlInsert, { listid: myList }, function (data) {
-            window.location = "..";
-        });
     }
 
 </script>
@@ -251,26 +152,19 @@
         <div class="form-group" style="background-color:#FCF0AD; box-shadow: 10px 10px 5px #888888; padding:14px 7px 14px 4px">
             <!--@Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })-->
             <div class="col-md-10">
-                <div id="deleteThisPage" style="float:right;">
-                    <input class="btn btn-default" id="delInitialBut" type="button" value="Delete..." onclick="pageDeleteDisplay()" style="float:right;">                    
-                    <input class="btn btn-default" id="delCancelBut" type="button" value="No" onclick="pageDeleteHide()" style="float:right;display:none;">
-                    <input class="btn btn-default" id="delConfirmBut" type="button" value="Yes" onclick="pageDelete()" style="float:right;display:none;">
-                    <div id="delConfirmMessage" style="float:right;color:red;display:none;">Are you Sure?&nbsp;&nbsp;&nbsp;</div>
-                </div>
-
-                Title:<br />
+                Title:
                 <!-- title label -->
                 <!-- textbox for title --> 
+
                 
                 <div><input id="titleBox" type="text" value="@Model.title" style="float:left;display:none;" /></div>
                 <input class="btn btn-default" id="titleEdit" type="button" value="Save..." onclick="titleEditSave()" style="float:left;display:none;">
                 <div id="titleDiv" style="font-weight:bold;font-size:28px;float:left;">@Model.title</div>
                 <div id="titleEditLink" style="font-size:9px;float:left;">(<a onclick="titleEditDisplay()" href="javascript:void(0);" >edit</a>)</div>
 
+
                 <br />
-                <br />
-                <h4>Categories:</h4>
-                <div id="categories">
+                Categories:<div id="categories">
                 <!-- for each loop to list categories -->
                 @{
 
@@ -309,13 +203,12 @@
                         <input id ="btnAddClass" class="btn btn-default" type="button" value="Add Category" onclick="beginCatAdd()" />
                     }
                 }
-                
+
                 <br />
                 <br />
                 <br />
 
-                <h4>Items:</h4>
-                <div id="todoitems">
+                Items:<div id="todoitems">
                 <!-- for each list to add todo items -->
                 <div style="border-bottom-style:groove;">
                     <div style="width:20%;float:left;border-bottom-style:groove;">Title:</div>
