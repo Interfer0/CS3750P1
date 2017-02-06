@@ -97,7 +97,7 @@ namespace TodoSite.Controllers
             ViewBag.todolistid = new SelectList(db.TodoLists, "todolistid", "title", categoryTodoList.todolistid);
             return View(categoryTodoList);
         }
-
+        */
         // GET: CategoryTodoLists/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -132,7 +132,7 @@ namespace TodoSite.Controllers
             }
             base.Dispose(disposing);
         }
-        */
+        
 
         public int Insert(String listID, String catID)
         {
