@@ -134,21 +134,38 @@ namespace TodoSite.Controllers
             TodoItem toItem = new TodoItem();
             toItem.todolistid = int.Parse(listid);
             toItem.title = title;
-            toItem.description = description;            
+            toItem.description = description;
             toItem.complete = 0;
             db.TodoItems.Add(toItem);
             db.SaveChanges();
             return toItem.todoitemid;
         }
 
-        
+
         public int DeleteItem(String itemid)
         {
-
             TodoItem toItem = db.TodoItems.Find(int.Parse(itemid));
             db.TodoItems.Remove(toItem);
             db.SaveChanges();
             return toItem.todoitemid;
+        }
+
+        public int checkItem(String itemid, int isChecked)
+        {
+            TodoItem toItem = db.TodoItems.Find(int.Parse(itemid));
+            toItem.complete = Convert.ToByte(isChecked);
+            db.SaveChanges();
+            return toItem.todoitemid;
+        }
+
+        public int updateItem(String itemId, String itemTitle, String itemDescription)
+        {
+            TodoItem toItem = db.TodoItems.Find(int.Parse(itemId));
+            toItem.title = itemTitle;
+            toItem.description = itemDescription;
+            db.SaveChanges();
+            return toItem.todoitemid;
+
         }
     }
 }
