@@ -50,6 +50,8 @@ namespace TodoSite.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (todoList.title == null)
+                    todoList.title = "not named";
                 db.TodoLists.Add(todoList);
                 db.SaveChanges();
                 return RedirectToAction("Edit/"+todoList.todolistid.ToString());
